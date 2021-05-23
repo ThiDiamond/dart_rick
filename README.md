@@ -9,18 +9,16 @@ This is wrapper to use the [The Rick and Morty API](https://rickandmortyapi.com)
 
 ## Installation
 
-
-`npm i rickmortyapi`
-or
-`yarn add rickmortyapi`
+To use this package, add dart_rick as a [dependency in your pubspec.yaml file](https://flutter.dev/docs/development/packages-and-plugins/using-packages).
 
 ## Usage
 ```dart
-import 'package:dart_rick/getCharacter.dart';// getCharacter()
-
+import 'package:dart_rick/getCharacter.dart';
+import 'package:dart_rick/getLocation.dart';
+import 'package:dart_rick/getEpisode.dart';
 ```
 
-All methods return a Future.
+All methods return a Future,.
 
 - `getCharacter()`
 - `getEpisode()`
