@@ -13,9 +13,9 @@ To use this package, add dart_rick as a [dependency in your pubspec.yaml file](h
 
 ## Usage
 ```dart
-import 'package:dart_rick/getCharacter.dart';
-import 'package:dart_rick/getLocation.dart';
-import 'package:dart_rick/getEpisode.dart';
+import 'package:dart_rick/get_character.dart';
+import 'package:dart_rick/get_location.dart';
+import 'package:dart_rick/get_episode.dart';
 ```
 
 All methods return a Future,.
