@@ -1,5 +1,4 @@
-import 'package:dart_rick/getCharacter.dart';
-import 'package:dart_rick/request.dart';
+import 'package:dart_rick/get_character.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -12,7 +11,7 @@ void main() {
     final name = 'rick', status = 'alive';
     final options = {'name': name, 'status': status};
     final characters = await getCharacter(options);
-    final isCharactersFiltered = characters.every((character) {
+    final isCharactersFiltered = characters.items.every((character) {
       return propertyContainsValue(character.name, name) &&
           propertyContainsValue(character.status, status);
     });
@@ -20,9 +19,8 @@ void main() {
   });
 
   test('getCharacter({page: 2}) | Check pagination', () async {
-    final response =
-        await getEndpoint(endpoint: 'character', options: {'page': '2'});
-    expect(response['info']['prev'].endsWith('page=1'), true);
-    expect(response['info']['next'].endsWith('page=3'), true);
+    final result = await getCharacter({'page': '2'});
+    expect(result.prev!.endsWith('page=1'), true);
+    expect(result.next!.endsWith('page=3'), true);
   });
 }

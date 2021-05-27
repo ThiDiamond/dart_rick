@@ -1,6 +1,7 @@
-import 'package:dart_rick/getCharacter.dart';
-import 'package:dart_rick/getEpisode.dart';
-import 'package:dart_rick/getLocation.dart';
+import 'package:dart_rick/get_character.dart';
+import 'package:dart_rick/get_episode.dart';
+import 'package:dart_rick/get_location.dart';
+import 'package:dart_rick/models/Result.dart';
 import 'package:dart_rick/request.dart';
 import 'package:test/test.dart';
 
@@ -18,45 +19,46 @@ void main() {
     }
   });
   group('common tests', () {
-    commonTests(getCharacter, 'getCharacter');
-    commonTests(getLocation, 'getLocation');
-    commonTests(getEpisode, 'getEpisode');
+    commonTests(getCharacter, 'Character');
+    commonTests(getLocation, 'Location');
+    commonTests(getEpisode, 'Episode');
   });
 }
 
-void commonTests(Future<List<dynamic>> Function(dynamic) method, String name) {
-  test('$name() | Get all', () async {
+void commonTests(
+    Future<Result<dynamic>> Function(dynamic) method, String name) {
+  test('get$name() | Get all', () async {
     final results = await method(null);
-    expect(results.length, 20);
+    expect(results.items.length, 20);
   });
 
-  test('$name(1) | Check get by ID', () async {
+  test('get$name(1) | Check get by ID', () async {
     final results = await method(1);
-    final result = results[0];
+    final result = results.items[0];
     //t.is(typeof res === 'object', true)
     expect(result.id, 1);
   });
 
-  test('$name([1,2,3]) | Check get by array', () async {
+  test('get$name([1,2,3]) | Check get by array', () async {
     final arr = [1, 2, 3];
     final results = await method(arr);
 
     //t.is(typeof res === 'object' && Array.isArray(res), true)
-    for (var result in results) {
+    for (var result in results.items) {
       expect(arr.contains(result.id), true);
     }
   });
 
-  test('$name(6000) | Check 404', () async {
-    final results = await method(6000);
-    expect(results.isEmpty, true);
+  test('get$name(6000) | Check 404', () async {
+    final expectedError = '$name not found';
+    expect(() => method(6000), throwsA(predicate((e) => e == expectedError)));
   });
 
-  test('$name("wubba lubba dub dub") | Check throw error', () async {
+  test('get$name("wubba lubba dub dub") | Check throw error', () async {
     final expectedError =
         'As argument use an object, an array, an integer or leave it blank';
     expect(
-        () => getCharacter('wubba lubba dub dub'),
+        () => method('wubba lubba dub dub'),
         throwsA(predicate(
             (e) => e is ArgumentError && e.message == expectedError)));
   });

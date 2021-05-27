@@ -1,4 +1,4 @@
-import 'package:dart_rick/getLocation.dart';
+import 'package:dart_rick/get_location.dart';
 import 'package:dart_rick/request.dart';
 import 'package:test/test.dart';
 
@@ -12,7 +12,7 @@ void main() {
     final name = 'Earth', type = 'Planet';
     final options = {'name': name, 'type': type};
     final locations = await getLocation(options);
-    final isLocationsFiltered = locations.every((location) {
+    final isLocationsFiltered = locations.items.every((location) {
       return propertyContainsValue(location.name, name) &&
           propertyContainsValue(location.type, type);
     });
@@ -20,9 +20,8 @@ void main() {
   });
 
   test('getLocation({page: 2}) | Check pagination', () async {
-    final response =
-        await getEndpoint(endpoint: 'location', options: {'page': '2'});
-    expect(response['info']['prev'].endsWith('page=1'), true);
-    expect(response['info']['next'].endsWith('page=3'), true);
+    final results = await getLocation({'page': '2'});
+    expect(results.prev!.endsWith('page=1'), true);
+    expect(results.next!.endsWith('page=3'), true);
   });
 }

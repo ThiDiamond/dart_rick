@@ -1,5 +1,4 @@
-import 'package:dart_rick/getEpisode.dart';
-import 'package:dart_rick/request.dart';
+import 'package:dart_rick/get_episode.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -12,7 +11,7 @@ void main() {
     final name = 'Pilot', episodeName = 'S01E01';
     final options = {'name': name, 'episode': episodeName};
     final episodes = await getEpisode(options);
-    final isEpisodesFiltered = episodes.every((episode) {
+    final isEpisodesFiltered = episodes.items.every((episode) {
       return propertyContainsValue(episode.name, name) &&
           propertyContainsValue(episode.episode, episodeName);
     });
@@ -20,9 +19,8 @@ void main() {
   });
 
   test('getEpisode({page: 2}) | Check pagination', () async {
-    final response =
-        await getEndpoint(endpoint: 'episode', options: {'page': '2'});
-    expect(response['info']['prev'].endsWith('page=1'), true);
-    expect(response['info']['next'].endsWith('page=3'), true);
+    final result = await getEpisode({'page': '2'});
+    expect(result.prev!.endsWith('page=1'), true);
+    expect(result.next!.endsWith('page=3'), true);
   });
 }
