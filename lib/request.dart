@@ -8,7 +8,7 @@ Future getRequest(String endpointUrl) async {
   if (response.statusCode >= 200 && response.statusCode <= 300) {
     return jsonDecode(response.body);
   } else {
-    throw jsonDecode(response.body);
+    throw jsonDecode(response.body)['error'];
   }
 }
 
@@ -35,9 +35,19 @@ String validate(qry) {
 
 Future getEndpoint({endpoint = '', options}) async {
   var query = validate(options);
+  var response = {};
+  response['info'] = {};
+
   try {
     var data = await getRequest('$endpoint$query');
-    return data;
+    if (options is int && data is Map) {
+      response['results'] = [data];
+    } else if (options is List<int>) {
+      response['results'] = data;
+    } else {
+      response = data;
+    }
+    return response;
   } catch (e) {
     rethrow;
   }
@@ -45,27 +55,4 @@ Future getEndpoint({endpoint = '', options}) async {
 
 Future getEndpoints() {
   return getEndpoint();
-}
-
-List<T> mapToInterface<T>(results, Function(dynamic) parseFunction) {
-  if (results is Map) {
-    return [parseFunction(results)];
-  }
-  return List<T>.from(results.map((result) {
-    return parseFunction(result);
-  }));
-}
-
-Future<dynamic> getResults(endpoint, options) async {
-  try {
-    var response = await getEndpoint(endpoint: endpoint, options: options);
-    if (options is int || options is List<int>) {
-      return response;
-    }
-    return response['results'];
-  } on ArgumentError {
-    rethrow;
-  } catch (e) {
-    return [];
-  }
 }
